@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<robot name="barista_robot" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Include xacro files -->
+  <xacro:include filename="$(find barista_robot_description)/xacro/standoff.xacro"/>
+  <xacro:include filename="$(find barista_robot_description)/xacro/cup_holder_tray.xacro"/>
+  <xacro:include filename="$(find barista_robot_description)/xacro/laser_scanner.xacro"/>
+  <xacro:include filename="$(find barista_robot_description)/xacro/wheel.xacro"/>
+  <!-- Robot properties -->
+  <xacro:property name="robot_color" value="0.8 0.8 0.8 1.0"/>
+  <xacro:property name="lidar_color" value="0.4 0.8 0.6 1.0"/>
+  <xacro:property name="wheel_color" value="0.4 0.2 0.6 1.0"/>
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.155" radius="0.178"/>
+      </geometry>
+      <material name="${robot_color}"/>
+    </visual>
+    <inertial>
+      <mass value="10.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+    <collision>
+      <geometry>
+        <cylinder length="0.155" radius="0.178"/>
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="base_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <!-- Wheel -->
+  <xacro:wheel prefix="left" xyz="0.1 0 -0.09" rpy="0 1.57 0" color="${wheel_color}" />
+
+</robot>

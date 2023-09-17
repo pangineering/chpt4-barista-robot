@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="laser_scanner">
+<xacro:macro name="laser_scanner">
+
+  <!-- Check if the laser scanner should be included -->
+    <link name="lidar">
+      <!-- Define the visual and collision representations of the laser scanner -->
+      <visual>
+        <geometry>
+                <mesh filename="package://barista_robot_description/meshes/hokuyo_urg_04lx.dae" />
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+                <mesh filename="package://barista_robot_description/meshes/hokuyo_urg_04lx.stl" />
+        </geometry>
+      </collision>
+        <inertial>
+                <mass value="1.0" />
+                <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                     iyy="1.0" iyz="0.0"
+                     izz="1.0" />
+        </inertial>
+    </link>
+ </xacro:macro>
+
+
+ <xacro:macro name="laser_scan_joint">
+
+    <!-- Define the joint for the laser scanner -->
+    <joint name="laser_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="lidar"/>
+      <origin xyz="0 0 0.08" rpy="0 0 1.57"/>
+    </joint>
+ </xacro:macro>
+
+<xacro:macro name="laser_plugin">
+
+  <gazebo reference="lidar">
+    <sensor type="ray" name="head_hokuyo_sensor">
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <update_rate>5</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1.000000</resolution>
+            <min_angle>0.000000</min_angle>
+            <max_angle>6.280000</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.120000</min>
+          <max>3.5</max>
+          <resolution>0.015000</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+          <remapping>~/out:=scan</remapping>
+        </ros>
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <frame_name>lidar</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+ </xacro:macro>
+
+</robot>

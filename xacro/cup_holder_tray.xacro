@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="cup_holder_tray">
+
+  <!-- Define xacro properties for cup holder tray geometry -->
+
+ <xacro:macro name="top">
+
+  <!-- Generate the geometry for the cup holder tray -->
+  <link name="cup_holder_tray_link">
+    <visual>
+      <geometry>
+<cylinder length="0.09" radius="0.160"/>
+      </geometry>
+    </visual>
+        <collision>
+      <geometry>
+      <cylinder length="0.09" radius="0.160"/>
+      </geometry>
+    </collision>
+          <inertial>
+        <mass value="10.0"/>
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+      </inertial>
+  </link>
+    </xacro:macro>
+  <xacro:macro name="top_joint" params="origin_xyz origin_rpy">
+  <!-- Joint between base link and cup holder tray -->
+  <joint name="cup_holder_tray_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="cup_holder_tray_link"/>
+    <origin xyz="${origin_xyz}" rpy="${origin_rpy}" />
+  </joint>
+      </xacro:macro>
+
+</robot>

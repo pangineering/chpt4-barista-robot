@@ -1,0 +1,192 @@
+<?xml version="1.0" ?>
+<robot name="barista" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- Include external files -->
+
+<xacro:property name="robot_name"/>
+<xacro:property name="robot_name" value="$(arg robot_name)"/>
+ <xacro:include filename="$(find barista_robot_description)/xacro/wheel.xacro"/>
+  <xacro:include filename="$(find barista_robot_description)/xacro/standoff.xacro"/>
+  <xacro:include filename="$(find barista_robot_description)/xacro/laser_scanner.xacro"/>
+  <xacro:include filename="$(find barista_robot_description)/xacro/cup_holder_tray.xacro"/>
+
+
+  <!-- Define the base link of the robot -->
+  <link name="base_link">
+    <!-- Visual representation of the base link -->
+    <visual>
+      <geometry>
+        <cylinder length="0.155" radius="0.178"/>
+      </geometry>
+    </visual>
+    <!-- Inertial properties of the base link -->
+    <inertial>
+      <mass value="10.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+    <!-- Collision representation of the base link -->
+    <collision>
+      <geometry>
+        <cylinder length="0.155" radius="0.178"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Gazebo-specific configuration for the base link -->
+  <gazebo reference="base_link">
+    <material>Gazebo/Green</material>
+  </gazebo>
+<link name="c1">
+    <visual>
+      <geometry>
+        <sphere radius="0.0352"/>
+      </geometry>
+      <material name="castor_color"/>
+    </visual>
+        <inertial>
+      <mass value="0.05"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+         <collision>
+      <geometry>
+       <sphere radius="0.0352"/>
+      </geometry>
+      </collision>
+</link>
+
+
+  <joint name="c1_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="c1"/>
+    <origin xyz="0.0 -0.1  -0.09" rpy="0 1.57 0" />
+
+  </joint>
+
+
+<link name="c2">
+    <visual>
+      <geometry>
+        <sphere radius="0.0352"/>
+      </geometry>
+      <material name="castor_color"/>
+    </visual>
+        <inertial>
+      <mass value="0.05"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+         <collision>
+      <geometry>
+       <sphere radius="0.0352"/>
+      </geometry>
+      </collision>
+</link>
+
+
+  <joint name="c2_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="c2"/>
+    <origin xyz="0.0 0.1  -0.09" rpy="0 1.57 0" />
+
+  </joint>
+
+  <!-- Include and instantiate the wheel.xacro macro for the left wheel -->
+  <xacro:wheel prefix="left" />
+<xacro:wheel_color prefix="left" />
+  <xacro:joint_wheel prefix="left" x="0.1" />
+
+
+
+  <!-- Include and instantiate the wheel.xacro macro for the right wheel -->
+  <xacro:wheel prefix="right" />
+<xacro:wheel_color prefix="right" />
+  <xacro:joint_wheel prefix="right" x="-0.1" /> 
+
+
+
+  <gazebo>
+    <plugin name="${robot_name}_diff_drive" filename="libgazebo_ros_diff_drive.so">
+            <ros>
+            <namespace>/${robot_name}</namespace>
+      <remapping>/cmd_vel:=cmd_vel</remapping>
+        </ros>
+      <!-- wheels -->
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+
+      <!-- kinematics -->
+      <wheel_separation>1.66</wheel_separation>
+      <wheel_diameter>0.8</wheel_diameter>
+
+      <!-- limits -->	
+      <max_wheel_torque>20</max_wheel_torque>
+      <max_wheel_acceleration>1.0</max_wheel_acceleration>
+
+      <!-- output -->
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>false</publish_odom_tf>
+      <publish_wheel_tf>true</publish_wheel_tf>
+      <command_topic>cmd_vel</command_topic>
+
+        <odometry_frame>${robot_name}/odom</odometry_frame>
+        <robot_base_frame>${robot_name}/base_link</robot_base_frame>
+    </plugin>
+  </gazebo>
+
+  <xacro:standoff_link prefix="stand1" />
+  <xacro:standoff_joint prefix="stand1" x="0.1" y="0.1" z="0.185" />
+
+
+<xacro:standoff_link prefix="stand2" />
+<xacro:standoff_joint prefix="stand2" x="0.1" y="-0.1" z="0.185" />
+
+
+<xacro:standoff_link prefix="stand3" />
+<xacro:standoff_joint prefix="stand3" x="-0.1" y="0.1" z="0.185" />
+
+
+<xacro:standoff_link prefix="stand4" />
+<xacro:standoff_joint prefix="stand4" x="-0.1" y="-0.1" z="0.185" />
+
+<xacro:laser_scanner />
+
+<xacro:laser_scan_joint />
+  <gazebo reference="lidar">
+    <sensor type="ray" name="head_hokuyo_sensor">
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <update_rate>5</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1.000000</resolution>
+            <min_angle>0.000000</min_angle>
+            <max_angle>6.280000</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.120000</min>
+          <max>3.5</max>
+          <resolution>0.015000</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="${robot_name}_gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+
+                    <namespace>/${robot_name}</namespace>
+
+          <remapping>~/out:=scan</remapping>
+        </ros>
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <frame_name>${robot_name}/lidar</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+<xacro:top />
+
+<xacro:top_joint origin_xyz="0.0 0.0 0.3425" origin_rpy="0 0 1.57" />
+</robot>

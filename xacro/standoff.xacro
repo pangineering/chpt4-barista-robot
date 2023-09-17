@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Define the properties -->
+  <xacro:property name="origin_xyz" value=""/>
+  <xacro:property name="origin_rpy" value=""/>
+  <xacro:property name="color" value=""/>
+
+  <!-- Standoff rod link -->
+  <xacro:macro name="standoff_link" params="prefix">
+    <link name="${prefix}_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder length="0.220" radius="0.010"/>
+        </geometry>
+        <material name="white"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <cylinder length="0.220" radius="0.010"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="10.0"/>
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+      </inertial>
+    </link>
+    </xacro:macro>
+  <xacro:macro name="standoff_joint" params="prefix x y z">
+
+    <!-- Joint between base link and standoff rod -->
+    <joint name="${prefix}_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="${prefix}_link"/>
+      <origin xyz="${x} ${y} ${z}" rpy="0 0 1.57" />
+    </joint>
+      </xacro:macro>
+
+  <xacro:macro name="standoff_color" params="prefix">
+
+    <!-- Gazebo properties for visualization -->
+    <gazebo reference="${prefix}_link">
+      <material>${color}</material>
+    </gazebo>
+  </xacro:macro>
+
+
+</robot>
