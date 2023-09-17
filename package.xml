@@ -4,15 +4,25 @@
   <name>barista_robot_description</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="pangineering@gmail.com">user</maintainer>
+  <maintainer email="user@todo.todo">user</maintainer>
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
-
+    <depend>urdf</depend>
+  <depend>xacro</depend>
+  <depend>gazebo_ros_pkgs</depend>
+  <depend>sensor_msgs</depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>joint_state_publisher_gui</exec_depend>
+  <exec_depend>joint_state_publisher</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
   <export>
     <build_type>ament_cmake</build_type>
+    <gazebo_ros gazebo_plugin_path="${prefix}/lib"/>
+    <gazebo_ros gazebo_model_path="${prefix}/models"/>
   </export>
 </package>

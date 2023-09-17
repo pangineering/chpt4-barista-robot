@@ -1,0 +1,319 @@
+<?xml version="1.0"?>
+<robot name="baristabot">
+
+  <!-- Define your robot links, joints, and other elements here -->
+
+  <!-- Robot properties -->
+  <material name="robot_color">
+    <color rgba="0.8 0.8 0.8 1.0"/>
+  </material>
+
+  <material name="lidar_color">
+    <color rgba="0.4 0.8 0.6 1.0"/>
+  </material>
+
+  <material name="wheel_color">
+    <color rgba="0.4 0.2 0.6 1.0"/>
+  </material>
+
+
+  <material name="castor_color">
+    <color rgba="0.8 0.2 0.4 1.0"/>
+  </material>
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.155" radius="0.178"/>
+      </geometry>
+      <material name="robot_color"/>
+    </visual>
+    <inertial>
+      <mass value="10.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <!-- Joint between base link and standoff rod -->
+  <joint name="top_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="top_link"/>
+    <origin xyz="0.0 0.0 0.3425" rpy="0 0 1.57" />
+  </joint>
+
+  <!-- Standoff rod link -->
+  <link name="standoff_link1">
+    <visual>
+      <geometry>
+        <cylinder length="0.220" radius="0.010"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!-- Joint between base link and standoff rod -->
+  <joint name="standoff_joint1" type="fixed">
+    <parent link="base_link"/>
+    <child link="standoff_link1"/>
+    <origin xyz="0.10 0.1 0.185" rpy="0 0 1.57" />
+  </joint>
+
+  <link name="standoff_link2">
+    <visual>
+      <geometry>
+        <cylinder length="0.220" radius="0.010"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!-- Joint between base link and standoff rod -->
+  <joint name="standoff_joint2" type="fixed">
+    <parent link="base_link"/>
+    <child link="standoff_link2"/>
+    <origin xyz="-0.10 0.1 0.185" rpy="0 0 1.57" />
+  </joint>
+
+  <link name="standoff_link3">
+    <visual>
+      <geometry>
+        <cylinder length="0.220" radius="0.010"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!-- Joint between base link and standoff rod -->
+  <joint name="standoff_joint3" type="fixed">
+    <parent link="base_link"/>
+    <child link="standoff_link3"/>
+    <origin xyz="0.10 -0.1 0.185" rpy="0 0 1.57" />
+  </joint>
+
+  <link name="standoff_link4">
+    <visual>
+      <geometry>
+        <cylinder length="0.220" radius="0.010"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!-- Joint between base link and standoff rod -->
+  <joint name="standoff_joint4" type="fixed">
+    <parent link="base_link"/>
+    <child link="standoff_link4"/>
+    <origin xyz="-0.10 -0.1 0.185" rpy="0 0 1.57" />
+  </joint>
+
+  <link name="top_link">
+    <visual>
+      <origin xyz="0 0 0.0" />
+      <geometry>
+        <cylinder length="0.09" radius="0.160"/>
+      </geometry>
+      <material name="robot_color"/>
+    </visual>
+    <inertial>
+      <mass value="10.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <link name="lidar">
+    <visual>
+      <geometry>
+                <mesh filename="package://barista_robot_description/meshes/hokuyo_urg_04lx.dae" />
+      </geometry>
+      <material name="lidar_color"/>
+    </visual>
+    <inertial>
+      <mass value="10.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+            <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+                <mesh filename="package://barista_robot_description/meshes/hokuyo_urg_04lx.stl" />
+      </geometry>
+        </collision>
+  </link>
+
+  <!-- Joint between base link and standoff rod -->
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar"/>
+    <origin xyz="0 0 0.08" rpy="0 0 1.57" />
+  </joint>
+
+  <!-- wheel -->
+  <link name="left_wheel_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.0206" radius="0.0352"/>
+      </geometry>
+      <material name="wheel_color"/>
+    </visual>
+    <inertial>
+      <mass value="10.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+             <collision>
+      <geometry>
+        <cylinder length="0.0206" radius="0.0352"/>
+      </geometry>
+      </collision>
+
+  </link>
+
+  <!-- Joint between base link and wheel -->
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_wheel_link"/>
+    <origin xyz="0.1 0 -0.09" rpy="0 1.57 0" />
+        <axis rpy="0 0 0" xyz="0 0 1"/>
+    <limit effort="10000" velocity="1000"/>
+    <joint_properties damping="1.0" friction="1.0"/>
+  </joint>
+
+  <link name="right_wheel_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.0206" radius="0.0352"/>
+      </geometry>
+      <material name="wheel_color"/>
+    </visual>
+    <inertial>
+      <mass value="10.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+         <collision>
+      <geometry>
+        <cylinder length="0.0206" radius="0.0352"/>
+      </geometry>
+      </collision>
+
+  </link>
+
+  <!-- Joint between base link and wheel -->
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_wheel_link"/>
+    <origin xyz="-0.1 0 -0.09" rpy="0 1.57 0" />
+        <axis rpy="0 0 0" xyz="0 0 1"/>
+    <limit effort="10000" velocity="1000"/>
+    <joint_properties damping="1.0" friction="1.0"/>
+  </joint>
+
+<link name="c1">
+    <visual>
+      <geometry>
+        <sphere radius="0.0352"/>
+      </geometry>
+      <material name="castor_color"/>
+    </visual>
+        <inertial>
+      <mass value="0.05"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+         <collision>
+      <geometry>
+       <sphere radius="0.0352"/>
+      </geometry>
+      </collision>
+</link>
+
+
+  <joint name="c1_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="c1"/>
+    <origin xyz="0.0 -0.1  -0.09" rpy="0 1.57 0" />
+
+  </joint>
+
+
+<link name="c2">
+    <visual>
+      <geometry>
+        <sphere radius="0.0352"/>
+      </geometry>
+      <material name="castor_color"/>
+    </visual>
+        <inertial>
+      <mass value="0.05"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+         <collision>
+      <geometry>
+       <sphere radius="0.0352"/>
+      </geometry>
+      </collision>
+</link>
+
+
+  <joint name="c2_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="c2"/>
+    <origin xyz="0.0 0.1  -0.09" rpy="0 1.57 0" />
+
+  </joint>
+
+<gazebo>
+    <plugin name='diff_drive' filename='libgazebo_ros_diff_drive.so'>
+
+      <!-- wheels -->
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+
+      <!-- kinematics -->
+      <wheel_separation>1.66</wheel_separation>
+      <wheel_diameter>0.8</wheel_diameter>
+
+      <!-- limits -->	
+      <max_wheel_torque>20</max_wheel_torque>
+      <max_wheel_acceleration>1.0</max_wheel_acceleration>
+
+      <!-- output -->
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>false</publish_odom_tf>
+      <publish_wheel_tf>true</publish_wheel_tf>
+            <command_topic>cmd_vel</command_topic>
+
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_link</robot_base_frame>
+    </plugin>
+  </gazebo>
+
+
+  <gazebo reference="lidar">
+    <sensor type="ray" name="head_hokuyo_sensor">
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <update_rate>5</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1.000000</resolution>
+            <min_angle>0.000000</min_angle>
+            <max_angle>6.280000</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.120000</min>
+          <max>3.5</max>
+          <resolution>0.015000</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+          <remapping>~/out:=scan</remapping>
+        </ros>
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <frame_name>lidar</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+</robot>
