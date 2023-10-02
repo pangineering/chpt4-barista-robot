@@ -51,31 +51,11 @@ def generate_launch_description():
     params2 = {'robot_description': doc2.toxml()}
 
 
-    # Robot 1 - Robot State Publisher
-    rsp_robot1 = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        name='robot_state_publisher',
-        namespace=robot_name_1,  # Use the launch argument 'robot_name'
-        parameters=[{
-            'frame_prefix': robot_name_1 + '/',  # Use the launch argument 'robot_name'
-            'use_sim_time': use_sim_time,
-            'robot_description': Command(
-                [
-                    'xacro ',
-                    robot_desc_path,
-                    ' robot_name:=' + robot_name_1  # Pass the 'robot_name' as an argument to xacro
-                ]
-            )
-        }],
-        arguments=['-robot_name',robot_name_1,'-robot_namespace',robot_name_1],
-        output="screen"
-    )
 
     rsp_robot11 = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
-        name='robot_state_publisher2',
+        name='robot_state_publisher',
         namespace=robot_name_1,
         parameters=[{'frame_prefix': robot_name_1 + '/'},params1],
         output="screen",
@@ -93,31 +73,14 @@ def generate_launch_description():
         remappings=[('/scan', robot_name_2 + '/scan')]
     )
 
-    # Robot 1 - Robot State Publisher
-    rsp_robot2 = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        name='robot_state_publisher2',
-        namespace=robot_name_2,  # Use the launch argument 'robot_name'
-        parameters=[{
-            'frame_prefix': robot_name_2 + '/',  # Use the launch argument 'robot_name'
-            'use_sim_time': use_sim_time,
-            'robot_description': Command(
-                [
-                    'xacro ',
-                    robot_desc_path,
-                    ' robot_name:=' + robot_name_2  # Pass the 'robot_name' as an argument to xacro
-                ]
-            )
-        }],
-        output="screen"
-    )
+
 
     # Joint State Publisher GUI for Robot 1
     jspn_robot1 = Node(
         package='joint_state_publisher_gui',
         executable='joint_state_publisher_gui',
         name='joint_state_publisher_gui1',
+        namespace=robot_name_1,  # Correct namespace
         output='screen'
     )
 
@@ -145,15 +108,51 @@ def generate_launch_description():
         arguments=['-entity', 'robot2', '-x', '1.0', '-y', '1.0', '-z', '0.0',
                    '-topic', robot_name_2+'/robot_description']
     )
+    # TF2 Node for Robot 1
+    tf_node_robot1 = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='tf_publisher_robot1',
+        namespace=robot_name_1,
+        output='screen',
+        arguments=[
+            '0', '0', '0', '0', '0', '0', 'world', f'{robot_name_1}/base_link'
+        ]
+    )
 
+    # TF2 Node for Robot 2
+    tf_node_robot2 = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='tf_publisher_robot2',
+        namespace=robot_name_2,
+        output='screen',
+        arguments=[
+            '1.0', '1.0', '0', '0', '0', '0', 'world', f'{robot_name_2}/base_link'
+        ]
+    )
+
+    rviz_config_dir = os.path.join(get_package_share_directory(description_package_name), 'rviz', 'robot2.rviz')
+
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        output='screen',
+        name='rviz_node',
+        parameters=[{'use_sim_time': True}],
+        arguments=['-d', rviz_config_dir]
+    )
     return LaunchDescription([
         declare_use_sim_time,
+        rviz_node,
         gazebo,
         #declare_robot_name,
         rsp_robot11,
         rsp_robot21,
         jspn_robot1,
         jspn_robot2,
+        tf_node_robot1,  # Add TF node for Robot 1
+        tf_node_robot2,  # Add TF node for Robot 2
         spawn_robot1,
         spawn_robot2
     ])
